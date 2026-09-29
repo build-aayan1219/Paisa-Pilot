@@ -18,7 +18,7 @@ class RiyaDataGenerator {
       name: 'Riya Sharma',
       incomeCycleDay: 1, // Salary day is 1st of month
       monthlyIncome: 25000.0,
-      openingBalance: 6850.0, // Mid-cycle balance creating ~78% shortfall probability
+      openingBalance: 8450.0, // Mid-cycle balance creating ~78% shortfall probability
       language: 'en',
     );
   }

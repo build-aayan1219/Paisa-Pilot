@@ -62,6 +62,7 @@ class ForecastParams {
   final Map<int, double> upcomingBillsByDayOffset; // dayOffset -> billAmount
   final double categoryReductionFactor; // 0.0 - 1.0 (from what-if)
   final double monthlyIncome;
+  final int incomeCycleDay;
   final bool isColdStart;
   final DateTime startDate;
 
@@ -72,6 +73,7 @@ class ForecastParams {
     required this.upcomingBillsByDayOffset,
     this.categoryReductionFactor = 1.0,
     required this.monthlyIncome,
+    required this.incomeCycleDay,
     this.isColdStart = false,
     required this.startDate,
   });

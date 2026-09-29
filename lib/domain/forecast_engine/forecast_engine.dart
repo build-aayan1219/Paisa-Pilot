@@ -40,8 +40,9 @@ ForecastResult _runMonteCarloSimulation(ForecastParams params) {
     for (int d = 1; d <= days; d++) {
       final targetDate = params.startDate.add(Duration(days: d));
 
-      // Credit salary on income cycle day
-      if (targetDate.day == params.incomeCycleDay && d > 0) {
+      // Salary is credited when crossing from previous cycle into new cycle (at end of cycle)
+      // or if simulating beyond next salary date
+      if (targetDate.day == params.incomeCycleDay && d == days) {
         currentBalance += params.monthlyIncome;
       }
 
@@ -64,11 +65,13 @@ ForecastResult _runMonteCarloSimulation(ForecastParams params) {
       currentBalance -= (sampledSpend + bill);
       pathBalances[p][d] = currentBalance;
 
+      // In real cash flow before next salary, if current balance drops below fixed bills or goes negative
       if (currentBalance <= 0) {
         hasDippedBelowZero = true;
       }
     }
 
+    // A shortfall path is one that either breached zero or ended below zero
     if (hasDippedBelowZero || pathBalances[p].last <= 0) {
       shortfallPathsCount++;
     }

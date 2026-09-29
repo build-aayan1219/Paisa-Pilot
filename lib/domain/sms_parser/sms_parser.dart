@@ -36,8 +36,15 @@ class SmsParser {
   static String detectBank(String text) {
     final lower = text.toLowerCase();
     if (lower.contains('hdfc')) return 'HDFC';
-    if (lower.contains('sbi') || lower.contains('state bank')) return 'SBI';
-    if (lower.contains('icici')) return 'ICICI';
+    if (lower.contains('sbi') ||
+        lower.contains('state bank') ||
+        RegExp(r'\ba\/c\s+x{3,}', caseSensitive: false).hasMatch(text)) {
+      return 'SBI';
+    }
+    if (lower.contains('icici') ||
+        RegExp(r'\bacct\s+xx', caseSensitive: false).hasMatch(text)) {
+      return 'ICICI';
+    }
     if (lower.contains('axis')) return 'AXIS';
     if (lower.contains('kotak')) return 'KOTAK';
     return 'GENERIC';

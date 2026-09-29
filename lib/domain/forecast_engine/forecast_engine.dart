@@ -131,11 +131,11 @@ class ForecastEngine {
   }) async {
     final now = currentDate ?? DateTime.now();
 
-    // 1. Calculate forecast horizon (default to 30 days or next cycle)
+    // 1. Calculate forecast horizon (default to 14 days or next salary cycle)
     int daysLeft = forecastDays ??
-        (isNext30Days ? 30 : _calculateDaysToSalary(now, user.incomeCycleDay));
-    if (daysLeft < 7) {
-      daysLeft = 30; // Extend if at the very tail of cycle to show month-end outlook
+        (isNext30Days ? 14 : _calculateDaysToSalary(now, user.incomeCycleDay));
+    if (daysLeft < 5) {
+      daysLeft = 14; // Look ahead 14 days to upcoming salary date
     }
 
     // 2. Map upcoming recurring bills by day offset (matching day of month)

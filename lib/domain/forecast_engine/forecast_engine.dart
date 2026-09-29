@@ -118,21 +118,25 @@ class ForecastEngine {
     required List<TransactionItem> transactions,
     required List<RecurringItem> recurringItems,
     double categoryReductionMultiplier = 1.0,
+    bool isNext30Days = true,
+    int? forecastDays,
     DateTime? currentDate,
   }) async {
     final now = currentDate ?? DateTime.now();
 
-    // 1. Calculate days left until salary day
-    int daysLeft = _calculateDaysToSalary(now, user.incomeCycleDay);
+    // 1. Calculate forecast horizon (default to 30 days or next cycle)
+    int daysLeft = forecastDays ??
+        (isNext30Days ? 30 : _calculateDaysToSalary(now, user.incomeCycleDay));
+    if (daysLeft < 7) {
+      daysLeft = 30; // Extend if at the very tail of cycle to show month-end outlook
+    }
 
-    // 2. Map upcoming recurring bills by day offset
+    // 2. Map upcoming recurring bills by day offset (matching day of month)
     final upcomingBillsMap = <int, double>{};
     for (int d = 1; d <= daysLeft; d++) {
       final targetDay = now.add(Duration(days: d));
       final billsOnDay = recurringItems.where((b) {
-        return b.nextDue.year == targetDay.year &&
-            b.nextDue.month == targetDay.month &&
-            b.nextDue.day == targetDay.day;
+        return b.nextDue.day == targetDay.day;
       }).fold<double>(0.0, (sum, b) => sum + b.amount);
 
       if (billsOnDay > 0) {

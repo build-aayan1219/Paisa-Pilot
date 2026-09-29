@@ -64,14 +64,16 @@ ForecastResult _runMonteCarloSimulation(ForecastParams params) {
       currentBalance -= (sampledSpend + bill);
       pathBalances[p][d] = currentBalance;
 
-      // In real cash flow before next salary, if current balance drops below fixed bills or goes negative
+      // Check if cash ran dry during the cycle
       if (currentBalance <= 0) {
         hasDippedBelowZero = true;
       }
     }
 
-    // A shortfall path is one that either breached zero or ended below zero
-    if (hasDippedBelowZero || pathBalances[p].last <= 0) {
+    // A shortfall occurs if cash dipped below zero before salary OR month-end closing balance is under target buffer
+    if (hasDippedBelowZero && pathBalances[p].last < (params.monthlyIncome * 0.10)) {
+      shortfallPathsCount++;
+    } else if (pathBalances[p].last <= 0) {
       shortfallPathsCount++;
     }
   }

@@ -40,9 +40,8 @@ ForecastResult _runMonteCarloSimulation(ForecastParams params) {
     for (int d = 1; d <= days; d++) {
       final targetDate = params.startDate.add(Duration(days: d));
 
-      // Salary is credited when crossing from previous cycle into new cycle (at end of cycle)
-      // or if simulating beyond next salary date
-      if (targetDate.day == params.incomeCycleDay && d == days) {
+      // Salary is credited on the next salary date (day == days)
+      if (d == days) {
         currentBalance += params.monthlyIncome;
       }
 

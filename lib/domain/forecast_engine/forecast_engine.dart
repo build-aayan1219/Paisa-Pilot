@@ -38,6 +38,13 @@ ForecastResult _runMonteCarloSimulation(ForecastParams params) {
     bool hasDippedBelowZero = currentBalance <= 0;
 
     for (int d = 1; d <= days; d++) {
+      final targetDate = params.startDate.add(Duration(days: d));
+
+      // Credit salary on income cycle day
+      if (targetDate.day == params.incomeCycleDay && d > 0) {
+        currentBalance += params.monthlyIncome;
+      }
+
       // Sample daily spend using bootstrap + Box-Muller normal perturbation
       final sampledIndex = random.nextInt(spends.length);
       double sampledSpend = spends[sampledIndex];
@@ -62,7 +69,7 @@ ForecastResult _runMonteCarloSimulation(ForecastParams params) {
       }
     }
 
-    if (hasDippedBelowZero) {
+    if (hasDippedBelowZero || pathBalances[p].last <= 0) {
       shortfallPathsCount++;
     }
   }
@@ -166,6 +173,7 @@ class ForecastEngine {
       upcomingBillsByDayOffset: upcomingBillsMap,
       categoryReductionFactor: categoryReductionMultiplier,
       monthlyIncome: user.monthlyIncome,
+      incomeCycleDay: user.incomeCycleDay,
       isColdStart: isColdStart,
       startDate: now,
     );

@@ -65,8 +65,8 @@ class SectionHeader extends StatelessWidget {
                 ),
               ),
             )
-          else if (trailing != null)
-            trailing!,
+          else
+            ?trailing,
         ],
       ),
     );

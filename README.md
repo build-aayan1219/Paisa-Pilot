@@ -1,4 +1,4 @@
-💸 PaisaPilot
+33💸 PaisaPilot
 
 AI Financial Copilot for First-Time Earners
 
